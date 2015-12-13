@@ -69,6 +69,8 @@ function! neomake#signs#PlaceSign(entry, type) abort
         let sign_type = 'neomake_info'
     elseif a:entry.type ==# 'M'
         let sign_type = 'neomake_msg'
+    elseif a:entry.type ==# 'U'
+        let sign_type = 'neomake_uncovered'
     else
         let sign_type = 'neomake_err'
     endif
@@ -203,6 +205,17 @@ function! neomake#signs#RedefineInformationalSign(...)
     call neomake#signs#RedefineSign('neomake_info', opts)
 endfunction
 
+function! neomake#signs#RedefineUncoveredSign(...)
+    let default_opts = {'linehl': 'UncoveredLine'}
+    let opts = {}
+    if a:0
+        call extend(opts, a:1)
+    elseif exists('g:neomake_uncovered_sign')
+        call extend(opts, g:neomake_uncovered_sign)
+    endif
+    call extend(opts, default_opts, 'keep')
+    call neomake#signs#RedefineSign('neomake_uncovered', opts)
+endfunction
 
 let s:signs_defined = 0
 function! neomake#signs#DefineSigns()
@@ -212,5 +225,6 @@ function! neomake#signs#DefineSigns()
         call neomake#signs#RedefineWarningSign()
         call neomake#signs#RedefineInformationalSign()
         call neomake#signs#RedefineMessageSign()
+        call neomake#signs#RedefineUncoveredSign()
     endif
 endfunction
